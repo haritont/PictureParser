@@ -31,6 +31,12 @@ public class Parser {
         driver.get(url);
         Work();
     }
+    private void downloadPicture(WebElement pictureWeb){
+        
+    }
+    private void getUrlPicture(WebElement pictureWeb){
+
+    }
     private void Work(){
         driver.findElement(new By.ByXPath("/html/body/div[1]/div[3]/form/div[1]/div[1]/div[1]/div/div[2]/input"))
                 .sendKeys(text);
@@ -38,6 +44,12 @@ public class Parser {
                 .click();
         driver.findElement(new By.ByXPath("//*[@id=\"hdtb-msb\"]/div[1]/div/div[2]/a"))
                 .click();
+
+        ArrayList<WebElement> pictures = (ArrayList<WebElement>) driver.findElement(new By.ByXPath("//*[@id=\"islrg\"]/div[1]/div"));
+        for (int i=1;i<pictures.size();i++){
+            WebElement pictureWeb = pictures.get(i-1);
+            downloadPicture(pictureWeb);
+        }
     }
 
     public void End(){
