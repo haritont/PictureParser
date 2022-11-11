@@ -10,6 +10,7 @@ import java.util.ArrayList;
 
 public class Parser {
     private String url;
+    private String text;
 
     private WebDriver driver;
 
@@ -22,16 +23,21 @@ public class Parser {
         this.url = url;
     }
 
+    public void setText(String text) {
+        this.text = text;
+    }
+
     public void Start(){
         driver.get(url);
         Work();
     }
     private void Work(){
-
-    }
-
-    public void Print(){
-       
+        driver.findElement(new By.ByXPath("/html/body/div[1]/div[3]/form/div[1]/div[1]/div[1]/div/div[2]/input"))
+                .sendKeys(text);
+        driver.findElement(new By.ByXPath("/html/body/div[1]/div[3]/form/div[1]/div[1]/div[4]/center/input[1]"))
+                .click();
+        driver.findElement(new By.ByXPath("//*[@id=\"hdtb-msb\"]/div[1]/div/div[2]/a"))
+                .click();
     }
 
     public void End(){

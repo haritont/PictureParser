@@ -2,6 +2,10 @@ package org.example;
 
 public class Main {
     public static void main(String[] args) {
-        System.out.println("Hello world!");
+        Parser parser = new Parser();
+        parser.setUrl("https://www.google.ru/");
+        parser.setText("кися");
+        parser.Start();
+        parser.End();
     }
 }
