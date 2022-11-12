@@ -38,13 +38,13 @@ public class Parser {
         driver.get(url);
         Work();
     }
-    private void downloadPicture(WebElement pictureWeb){
+    private void downloadPicture(String urlPicture, int i){
         try {
             BufferedImage image =null;
-            URL connect = new URL(getUrlPicture(pictureWeb));
+            URL connect = new URL(urlPicture);
             image = ImageIO.read(connect);
             if (image != null){
-                ImageIO.write(image, "jpg",new File("picture\\"+pictureWeb.getText()+".jpg"));
+                ImageIO.write(image, "jpg",new File("D:\\вуз файлы\\Практика\\PictureParser\\src\\main\\java\\org\\example\\picture\\"+i+".jpg"));
             }
         }
         catch (FileNotFoundException e) {
@@ -54,26 +54,46 @@ public class Parser {
             throw new RuntimeException(e);
         }
     }
-    private String getUrlPicture(WebElement pictureWeb){
-        return pictureWeb.getAttribute("src");
+    private String getUrlPicture(WebElement pictureWeb, int i) {
+        try {
+            String url = pictureWeb
+                    .findElement(new By.ByXPath("//*[@id=\"islrg\"]/div[1]/div[" + i + "]/a[1]/div[1]/img"))
+                    .getAttribute("src");
+            if (url.matches("^data:.*")) return "";
+            else return url;
+        }
+        catch (Exception e){
+            return  "";
+        }
     }
-    private void Work(){
+    private void pause(){
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    private void Work() {
+        pause();
         driver.findElement(new By.ByXPath("/html/body/div[1]/div[3]/form/div[1]/div[1]/div[1]/div/div[2]/input"))
                 .sendKeys(text);
-        driver.findElement(new By.ByXPath("/html/body/div[1]/div[3]/form/div[1]/div[1]/div[4]/center/input[1]"))
+        pause();
+        driver.findElement(new By.ByXPath("/html/body/div[1]/div[3]/form/div[1]/div[1]/div[2]/div[2]/div[5]/center/input[1]"))
                 .click();
+        pause();
         driver.findElement(new By.ByXPath("//*[@id=\"hdtb-msb\"]/div[1]/div/div[2]/a"))
                 .click();
 
-        ArrayList<WebElement> pictures = (ArrayList<WebElement>) driver.findElements(new By.ByXPath("//*[@id=\"islrg\"]/div[1]"));
-        for (int i=1;i<pictures.size();i++){
-            WebElement pictureWeb = pictures.get(i-1);
+        ArrayList<WebElement> pictures = (ArrayList<WebElement>) driver.findElements(new By.ByXPath("//*[@id=\"islrg\"]/div[1]/div"));
+        for (int i = 1; i <= pictures.size(); i++) {
+            WebElement pictureWeb = pictures.get(i - 1);
 
             JavascriptExecutor jsScroll = (JavascriptExecutor) driver;
             jsScroll.executeScript("arguments[0].scrollIntoView();", pictureWeb);
-            pictures = (ArrayList<WebElement>) driver.findElements(new By.ByXPath("//*[@id=\"islrg\"]/div[1]"));
+            pictures = (ArrayList<WebElement>) driver.findElements(new By.ByXPath("//*[@id=\"islrg\"]/div[1]/div"));
 
-            downloadPicture(pictureWeb);
+            String urlPicture = getUrlPicture(pictureWeb, i);
+            if (urlPicture != "") downloadPicture(urlPicture, i);
         }
     }
 
