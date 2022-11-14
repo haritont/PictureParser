@@ -44,7 +44,7 @@ public class Parser {
             URL connect = new URL(urlPicture);
             image = ImageIO.read(connect);
             if (image != null){
-                ImageIO.write(image, "jpg",new File("D:\\вуз файлы\\Практика\\PictureParser\\src\\main\\java\\org\\example\\picture\\"+i+".jpg"));
+                ImageIO.write(image, "jpg",new File("D:\\вуз файлы\\Практика\\PictureParser\\src\\main\\java\\org\\example\\picture\\"+text+i+".jpg"));
             }
         }
         catch (FileNotFoundException e) {
@@ -81,8 +81,14 @@ public class Parser {
         driver.findElement(new By.ByXPath("/html/body/div[1]/div[3]/form/div[1]/div[1]/div[2]/div[2]/div[5]/center/input[1]"))
                 .click();
         pause();
-        driver.findElement(new By.ByXPath("//*[@id=\"hdtb-msb\"]/div[1]/div/div[2]/a"))
-                .click();
+
+        ArrayList<WebElement> items = (ArrayList<WebElement>) driver.findElements(new By.ByXPath("//*[@id=\"hdtb-msb\"]/div[1]/div/div"));
+        for(WebElement item: items){
+            if (item.getText().equals("Картинки")) {
+                item.click();
+                break;
+            }
+        }
 
         ArrayList<WebElement> pictures = (ArrayList<WebElement>) driver.findElements(new By.ByXPath("//*[@id=\"islrg\"]/div[1]/div"));
         for (int i = 1; i <= pictures.size(); i++) {
@@ -96,7 +102,6 @@ public class Parser {
             if (urlPicture != "") downloadPicture(urlPicture, i);
         }
     }
-
     public void End(){
         driver.quit();
     }
