@@ -9,16 +9,13 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 
 public class Parser {
     private String url;
     private String text;
-
     private WebDriver driver;
 
     public Parser(){
@@ -40,20 +37,18 @@ public class Parser {
     }
     private void downloadPicture(String urlPicture, int i){
         try {
-            BufferedImage image =null;
+            BufferedImage image;
             URL connect = new URL(urlPicture);
             image = ImageIO.read(connect);
             if (image != null){
                 ImageIO.write(image, "jpg",new File("D:\\вуз файлы\\Практика\\PictureParser\\src\\main\\java\\org\\example\\picture\\"+text+i+".jpg"));
             }
-        }
-        catch (FileNotFoundException e) {
-        } catch (MalformedURLException e) {
-            throw new RuntimeException(e);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+
     }
+
     private String getUrlPicture(WebElement pictureWeb, int i) {
         try {
             String url = pictureWeb
@@ -91,7 +86,7 @@ public class Parser {
         }
 
         ArrayList<WebElement> pictures = (ArrayList<WebElement>) driver.findElements(new By.ByXPath("//*[@id=\"islrg\"]/div[1]/div"));
-        for (int i = 1; i <= pictures.size(); i++) {
+        for (int i = 1; i <= 100; i++) {
             WebElement pictureWeb = pictures.get(i - 1);
 
             JavascriptExecutor jsScroll = (JavascriptExecutor) driver;
@@ -99,7 +94,7 @@ public class Parser {
             pictures = (ArrayList<WebElement>) driver.findElements(new By.ByXPath("//*[@id=\"islrg\"]/div[1]/div"));
 
             String urlPicture = getUrlPicture(pictureWeb, i);
-            if (urlPicture != "") downloadPicture(urlPicture, i);
+            if (!urlPicture.equals("")) downloadPicture(urlPicture, i);
         }
     }
     public void End(){
